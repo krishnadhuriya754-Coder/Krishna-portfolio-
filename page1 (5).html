@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI MCQ Generator - 3D Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script type="importmap">
+        {
+          "imports": {
+            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+          }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top right, #4f46e5, #1e1b4b, #000000);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 2rem;
+        }
+
+        /* 3D Button Effect */
+        .btn-3d {
+            transform: translateY(-4px);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 #3730a3;
+        }
+
+        .btn-3d:active {
+            transform: translateY(0px);
+            box-shadow: 0 0px 0 #3730a3;
+        }
+
+        /* Floating Animation */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Custom Scrollbar */
+        #result::-webkit-scrollbar {
+            width: 8px;
+        }
+        #result::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        /* Input Glow */
+        input:focus {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+            border-color: #818cf8 !important;
+        }
+    </style>
+</head>
+<body class="p-6">
+
+    <div class="absolute top-10 left-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl floating"></div>
+    <div class="absolute bottom-10 right-10 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl floating" style="animation-delay: -3s;"></div>
+
+    <div class="max-w-xl w-full glass-card p-8 md:p-10 relative z-10">
+        <div class="text-center mb-8">
+            <div class="inline-block p-4 rounded-2xl bg-indigo-600/20 mb-4 shadow-inner">
+                <span class="text-5xl">🤖</span>
+            </div>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight">AI MCQ <span class="text-indigo-400">Master</span></h1>
+            <p class="text-gray-400 text-sm mt-2">Generate high-quality questions in seconds</p>
+        </div>
+        
+        <form id="mcqForm" class="space-y-6">
+            <div class="relative">
+                <label class="block text-xs font-bold text-indigo-300 uppercase tracking-widest mb-2 ml-1">Chapter Name</label>
+                <input type="text" id="chapterName" placeholder="e.g. Quantum Physics" required 
+                    class="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 outline-none transition-all">
+            </div>
+
+            <div class="relative">
+                <label class="block text-xs font-bold text-indigo-300 uppercase tracking-widest mb-2 ml-1">Number of Questions</label>
+                <input type="number" id="mcqCount" min="1" max="10" placeholder="Max 10" required 
+                    class="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 outline-none transition-all">
+            </div>
+
+            <button type="submit" id="generateBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-xl btn-3d transition-all flex items-center justify-center gap-2">
+                <span>Generate Questions</span>
+                <span class="text-xl">✨</span>
+            </button>
+        </form>
+
+        <div id="resultContainer" class="mt-10 hidden border-t border-white/10 pt-8">
+            <h2 class="text-indigo-300 font-bold mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 bg-green-400 rounded-full animate-ping"></span>
+                Generated Content:
+            </h2>
+            <div id="result" class="max-h-80 overflow-y-auto p-5 bg-black/30 rounded-2xl text-gray-200 text-sm leading-relaxed whitespace-pre-line border border-white/5">
+                Questions will appear here...
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+
+        // BAS YAHAN API KEY DAALNA HAI
+        const API_KEY = "enyer yor API key"; 
+        
+        const mcqForm = document.getElementById('mcqForm');
+        const btn = document.getElementById('generateBtn');
+        const resultDiv = document.getElementById('result');
+        const resultContainer = document.getElementById('resultContainer');
+
+        mcqForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (API_KEY === "YOUR_API_KEY_HERE" || API_KEY.trim() === "") {
+                alert("Bhai, pehle API Key toh daal do!");
+                return;
+            }
+
+            const chapter = document.getElementById('chapterName').value;
+            const count = document.getElementById('mcqCount').value;
+
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            resultContainer.classList.remove('hidden');
+            resultDiv.innerText = "🧠 System is thinking... creating your MCQs.";
+
+            try {
+                const genAI = new GoogleGenerativeAI(API_KEY);
+                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+                
+                const prompt = `Act as an expert educator. Generate ${count} challenging multiple choice questions about "${chapter}". 
+                Format it like this:
+                Q1. [Question]
+                A) [Option]
+                B) [Option]
+                C) [Option]
+                D) [Option]
+                Correct Answer: [Option]
+
+                Make sure the language is professional.`;
+
+                const result = await model.generateContent(prompt);
+                resultDiv.innerText = result.response.text();
+            } catch (error) {
+                console.error(error);
+                resultDiv.innerText = "❌ Error: " + error.message;
+            } finally {
+                btn.innerText = "Generate Questions ✨";
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+            }
+        });
+    </script>
+</body>
+</html>

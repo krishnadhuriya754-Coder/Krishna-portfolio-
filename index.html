@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Krishna - Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.05"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>');
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s 0.2s forwards;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s 0.4s forwards;
+        }
+
+        .cta-buttons {
+            opacity: 0;
+            animation: fadeInUp 1s 0.6s forwards;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            margin: 0 1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #2563eb;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: white;
+            border-color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border-color: white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        /* Sections */
+        .section {
+            padding: 100px 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: #1e293b;
+        }
+
+        /* About Section */
+        .about {
+            background: #f8fafc;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2563eb;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            color: #64748b;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .project-image {
+            height: 200px;
+            background: linear-gradient(45deg, #2563eb, #1e40af);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .project-content {
+            padding: 2rem;
+        }
+
+        .project-content h3 {
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+
+        .project-content p {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .details-panel {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #475569;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            padding: 1rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-links.active {
+                display: flex !important;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+                border-radius: 8px;
+                padding: 1rem 2rem;
+                gap: 1.5rem;
+                z-index: 1001;
+                width: 180px;
+            }
+
+            .nav-links.active li {
+                margin: 0;
+            }
+
+            .nav-links.active li a {
+                font-weight: 600;
+                font-size: 1.1rem;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                margin: 0.5rem 0;
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+ </head>
+ <body>
+  <nav>
+   <div class="nav-container">
+    <div class="logo">Welcome</div>
+    <ul class="nav-links" id="nav-links">
+     <li><a href="#home">Home</a></li>
+     <li><a href="#about">About</a></li>
+     <li><a href="#projects">Projects</a></li>
+     <li><a href="page1.html" target="_blank">MCQ</a></li>
+
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" role="button" tabindex="0">
+     <span></span> <span></span> <span></span>
+    </div>
+   </div>
+  </nav>
+  <section id="home" class="hero">
+   <div class="hero-content">
+    <h1>Hi, I'm <span style="color: #fbbf24;">Krishna</span></h1>
+    <p>I create beautiful, functional digital experiences. Front-end developer passionate about crafting user-centered solutions.</p>
+    <div class="cta-buttons">
+     <a href="#projects" class="btn btn-primary">View My Work</a> <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+    </div>
+   </div>
+  </section>
+  <section id="about" class="section about">
+   <h2 class="section-title">About Me</h2>
+   <div class="about-content">
+    <div class="about-text">
+     <h3>Frontend Developer &amp; UI/UX Enthusiast</h3>
+     <p>I specialize in creating responsive web applications with modern technologies. I love turning complex problems into simple, beautiful designs that users love.</p>
+     <p>Currently working with React, Next.js, Tailwind CSS, and TypeScript. Always learning and exploring new ways to build better digital products.</p>
+     <div class="skills">
+      <span class="skill-tag">React</span> <span class="skill-tag">Next.js</span> <span class="skill-tag">TypeScript</span> <span class="skill-tag">Tailwind CSS</span> <span class="skill-tag">JavaScript</span> <span class="skill-tag">Figma</span>
+     </div>
+    </div>
+    <div style="text-align: center;">
+     <div style="width: 250px; height: 250px; margin: 0 auto; background: linear-gradient(135deg, #2563eb, #1e40af); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 4rem;">捉窶昨汳ｻ</div>
+    </div>
+   </div>
+  </section>
+  <section id="projects" class="section">
+   <h2 class="section-title">Featured Projects</h2>
+   <div class="projects-grid">
+    <div class="project-card">
+     <div class="project-image">
+      <i class="fas fa-laptop-code"></i>
+     </div>
+     <div class="project-content">
+      <h3>E-Commerce Platform</h3>
+      <p>A fully responsive online store built with Next.js, Stripe integration, and modern UI/UX design principles.</p>
+      
+      <div class="details-panel" style="display: none;">
+          <strong>Tech Stack:</strong> Next.js, Stripe, Tailwind CSS<br>
+          <strong>Features:</strong> Shopping Cart, Payment Gateway, User Auth.
+      </div>
+      
+      <div class="project-links">
+       <button onclick="toggleDetails(this)" style="background: none; border: none; color: #2563eb; font-weight: 600; cursor: pointer; text-align: left; padding: 0;">Learn More</button>
+      </div>
+     </div>
+    </div>
+    <div class="project-card">
+     <div class="project-image">
+      <i class="fas fa-chart-line"></i>
+     </div>
+     <div class="project-content">
+      <h3>Analytics Dashboard</h3>
+      <p>Interactive dashboard with real-time data visualization using Chart.js and React. Perfect for business insights.</p>
+      
+      <div class="details-panel" style="display: none;">
+          <strong>Tech Stack:</strong> React, Chart.js, Firebase<br>
+          <strong>Features:</strong> Live charts, Data export, Responsive grid.
+      </div>
+
+      <div class="project-links">
+       <button onclick="toggleDetails(this)" style="background: none; border: none; color: #2563eb; font-weight: 600; cursor: pointer; text-align: left; padding: 0;">Learn More</button>
+      </div>
+     </div>
+    </div>
+    <div class="project-card">
+     <div class="project-image">
+      <i class="fas fa-mobile-alt"></i>
+     </div>
+     <div class="project-content">
+      <h3>Mobile Banking App</h3>
+      <p>Clean, secure mobile-first banking interface with smooth animations and intuitive navigation.</p>
+      
+      <div class="details-panel" style="display: none;">
+          <strong>Tech Stack:</strong> React Native, Node.js<br>
+          <strong>Features:</strong> Money transfer, Secure login, History tracking.
+      </div>
+
+      <div class="project-links">
+       <button onclick="toggleDetails(this)" style="background: none; border: none; color: #2563eb; font-weight: 600; cursor: pointer; text-align: left; padding: 0;">Learn More</button>
+      </div>
+     </div>
+    </div>
+   </div>
+  </section>
+  <section id="contact" class="section contact">
+   <h2 class="section-title" style="color: white;">Let's Work Together</h2>
+   <p style="font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.9;">Ready to bring your next project to life? I'd love to hear from you.</p>
+   <div class="contact-links">
+    <a href="mailto:krishnakumardhuriya5@gmail.com" class="contact-link"> <i class="fas fa-envelope"></i> Email </a> <a href="https://github.com/krishnadhuriya754-Coder" class="contact-link"> <i class="fab fa-github"></i> GitHub </a> <a href="https://www.facebook.com/krishnakumar.dhuriya.31" class="contact-link"> <i class="fab fa-facebook"></i> Facebook </a>
+   </div>
+  </section>
+  <script>
+        // Hamburger menu toggle functionality
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+
+        function toggleMenu() {
+            const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+            hamburger.setAttribute('aria-expanded', !expanded);
+            navLinks.classList.toggle('active');
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+
+        hamburger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleMenu();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+                hamburger.setAttribute('aria-expanded', 'false');
+                navLinks.classList.remove('active');
+            }
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.project-card, .section-title').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        function toggleDetails(btn) {
+            const cardContent = btn.parentElement.parentElement;
+            const details = cardContent.querySelector('.details-panel');
+            
+            if (details.style.display === "none") {
+                details.style.display = "block";
+                btn.innerText = "Show Less";
+            } else {
+                details.style.display = "none";
+                btn.innerText = "Learn More";
+            }
+        }
+    </script>
+ </body>
+</html>
